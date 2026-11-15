@@ -1,0 +1,12 @@
+[Unit]
+Description=UDM-Pro Ubuntu first-boot initialization
+After=local-fs.target systemd-networkd.service
+Before=ssh.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/udm-firstboot.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

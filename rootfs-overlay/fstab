@@ -1,0 +1,4 @@
+# The kernel names the SATA disk deterministically (sda) - this image expects
+# to live on the first partition of the UDM-Pro's SATA bay.
+/dev/sda1  /      ext4  defaults,noatime  0 1
+proc       /proc  proc  defaults          0 0
