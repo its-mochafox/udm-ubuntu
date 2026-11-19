@@ -1,0 +1,14 @@
+[Unit]
+Description=UDM-Pro RTL8370B switch initialization
+After=systemd-modules-load.service
+Before=systemd-networkd.service
+Wants=systemd-modules-load.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/switch-init.sh
+TimeoutStartSec=30
+
+[Install]
+WantedBy=multi-user.target
