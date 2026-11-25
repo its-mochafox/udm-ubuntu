@@ -1,6 +1,7 @@
 ubuntu-minimal
 ubuntu-standard
 systemd-sysv
+systemd-resolved
 openssh-server
 sudo
 neofetch
@@ -11,15 +12,5 @@ e2fsprogs
 kmod
 dnsutils
 gnupg
-libnl-3-200
-libnl-genl-3-200
-libnl-3-200
-libnl-genl-3-200
-libnl-3-200
-libnl-genl-3-200
-libnl-3-200
-libnl-genl-3-200
-libnl-3-200
-libnl-genl-3-200
 libnl-3-200
 libnl-genl-3-200
