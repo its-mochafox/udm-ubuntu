@@ -43,7 +43,7 @@ LOOP="$(losetup --find --show -P "$IMAGE")"
 ROOTDEV="${LOOP}p1"
 cleanup() {
     set +e
-    umount -R "$MNT" 2>/dev/null
+    umount -R "$MNT" 2>/dev/null || umount -Rl "$MNT" 2>/dev/null
     losetup -d "$LOOP" 2>/dev/null
 }
 trap cleanup EXIT
@@ -62,9 +62,9 @@ fi
 
 echo ">> preparing chroot"
 mount -t proc proc "$MNT/proc"
-mount --rbind /sys "$MNT/sys"
-mount --rbind /dev "$MNT/dev"
-mount --rbind /dev/pts "$MNT/dev/pts"
+mount -t sysfs sysfs "$MNT/sys"
+mount --bind /dev "$MNT/dev"
+mount --bind /dev/pts "$MNT/dev/pts"
 
 cp /etc/resolv.conf "$MNT/etc/resolv.conf"
 cp packages.list scripts/provision.sh config.sh "$MNT/tmp/"
