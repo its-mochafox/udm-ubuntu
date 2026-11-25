@@ -66,6 +66,7 @@ mount --rbind /sys "$MNT/sys"
 mount --rbind /dev "$MNT/dev"
 mount --rbind /dev/pts "$MNT/dev/pts"
 
+cp /etc/resolv.conf "$MNT/etc/resolv.conf"
 cp packages.list scripts/provision.sh config.sh "$MNT/tmp/"
 if [ -n "$CHROOT_PREFIX" ]; then
     chroot "$MNT" "$CHROOT_PREFIX" /bin/bash /tmp/provision.sh

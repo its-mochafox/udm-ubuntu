@@ -7,7 +7,7 @@ source /tmp/config.sh
 export DEBIAN_FRONTEND=noninteractive
 
 echo ">> apt update"
-apt-get update -o Acquire::Retries=3
+apt-get update -o Acquire::Retries=3 || { echo "ERROR: apt-get update failed"; exit 1; }
 
 echo ">> installing package set"
 xargs -a /tmp/packages.list apt-get install -y --no-install-recommends
