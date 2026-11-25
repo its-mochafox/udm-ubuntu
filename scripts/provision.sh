@@ -12,6 +12,15 @@ apt-get update -o Acquire::Retries=3 || { echo "ERROR: apt-get update failed"; e
 echo ">> installing package set"
 xargs -a /tmp/packages.list apt-get install -y --no-install-recommends
 
+echo ">> switching to iptables-legacy"
+# This hardware's kernel has CONFIG_NF_TABLES unset (Ubiquiti strips nftables
+# from their own kernel builds), so the iptables-nft backend Ubuntu selects by
+# default cannot talk to the kernel at all: "Could not fetch rule set
+# generation id: Invalid argument". iptables-legacy uses the older xtables
+# interface this kernel does support.
+update-alternatives --set iptables /usr/sbin/iptables-legacy
+update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+
 echo ">> configuring users"
 # root: random password, emitted to the build artifacts
 ROOT_PW="$(openssl rand -base64 18)"

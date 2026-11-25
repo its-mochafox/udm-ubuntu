@@ -72,3 +72,32 @@ Power-cycle to test.
 ## Recovery
 
 Nothing here is destructive to the stock system. The SD card's boot files are untouched apart from one added `.dtb`, and the U-Boot env changes are reversible with `env default -a; saveenv` at the U-Boot prompt. Remove the `.dtb` from the SD card and/or pull the SSD to return the device to stock UniFi OS.
+
+## Container support (Docker, Podman): optional
+
+Skip this section if you do not plan to run containers. The rest of the image works fine without it.
+
+Ubiquiti's kernel also has `CONFIG_BPF_SYSCALL` unset, so the `bpf()` syscall does not exist at all. Cgroup v2 (Ubuntu's default) enforces per-container device access entirely through an eBPF program (`BPF_CGROUP_DEVICE`), so on this kernel every container runtime fails identically at container start:
+
+```
+runc create failed: unable to start container process: error during container init:
+error setting cgroup config for procHooks process: bpf_prog_query(BPF_CGROUP_DEVICE)
+failed: bpf: function not implemented
+```
+
+The kernel does still have the legacy cgroup v1 "devices" controller (a plain allow/deny list, no eBPF involved), so falling back to legacy/hybrid cgroups fixes it. This is a system-wide change, not a Docker-only setting: it affects how systemd accounts for every service's resources, not just containers.
+
+Add the boot argument the same way as `rootfs` in step 3, from the U-Boot prompt:
+
+```
+setenv bootargsextra 'systemd.unified_cgroup_hierarchy=0'
+saveenv
+```
+
+If you already use `bootargsextra` for something else, append rather than replace. Reboot, then confirm the switch took effect:
+
+```bash
+stat -fc %T /sys/fs/cgroup   # tmpfs (hybrid) instead of cgroup2fs
+```
+
+Docker/Podman installed afterward work normally. One more kernel quirk to know about before installing Docker: `iptables-nft` (Ubuntu's default alternative) cannot talk to this kernel either, because `CONFIG_NF_TABLES` is unset. The image already pins the system to `iptables-legacy` during provisioning, so this does not need any extra step.

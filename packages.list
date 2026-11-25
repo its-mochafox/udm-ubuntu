@@ -12,5 +12,6 @@ e2fsprogs
 kmod
 dnsutils
 gnupg
+iptables
 libnl-3-200
 libnl-genl-3-200
