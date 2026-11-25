@@ -82,6 +82,13 @@ ln -sf /lib/systemd/system/serial-getty@.service \
     "$MNT/etc/systemd/system/getty.target.wants/serial-getty@ttyS0.service"
 echo "/usr/local/lib" > "$MNT/etc/ld.so.conf.d/ubnt.conf"
 
+echo ">> enabling overlay services"
+mkdir -p "$MNT/etc/systemd/system/multi-user.target.wants"
+for unit in switch-init.service udm-firstboot.service; do
+    ln -sf "/etc/systemd/system/$unit" \
+        "$MNT/etc/systemd/system/multi-user.target.wants/$unit"
+done
+
 echo ">> capturing build root password"
 mv "$MNT/tmp/ROOT_PASSWORD.txt" "$OUT_DIR/ROOT_PASSWORD.txt"
 chmod 600 "$OUT_DIR/ROOT_PASSWORD.txt"

@@ -28,7 +28,7 @@ echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-ubuntu-cloud
 chmod 440 /etc/sudoers.d/90-ubuntu-cloud
 
 echo ">> enabling services"
-systemctl enable ssh systemd-networkd systemd-resolved switch-init.service
+systemctl enable ssh systemd-networkd systemd-resolved
 
 echo ">> base identity"
 echo "udm-ubuntu" > /etc/hostname
